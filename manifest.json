@@ -1,0 +1,26 @@
+{
+    "name": "Movie Tracker",
+    "version": "1.0.0",
+    "description": "test",
+    "manifest_version": 2,
+    "background": {
+        "scripts": ["background.js", "backgroundMessaging.js"],
+        "persistent": false
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["content.js", "contentMessaging.js"]
+    }],
+    "browser_action": {
+        "default_title": "created by @aturytsa",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "contextMenus",
+        "storage",
+        "https://www.imdb.com/*",
+        "https://github.com/*",
+        "https://imdb8.p.rapidapi.com/*"
+    ]
+}
