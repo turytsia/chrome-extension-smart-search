@@ -1,15 +1,15 @@
 {
     "name": "Movie Tracker",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Extension for quick search for movies",
     "manifest_version": 2,
     "background": {
-        "scripts": ["background.js", "backgroundMessaging.js"],
+        "scripts": ["background.js"],
         "persistent": false
     },
     "content_scripts": [{
         "matches": ["<all_urls>"],
-        "js": ["content.js", "contentMessaging.js"]
+        "js": ["content.js"]
     }],
     "browser_action": {
         "default_title": "created by @aturytsa",

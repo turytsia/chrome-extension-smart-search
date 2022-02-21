@@ -1,12 +1,13 @@
 {
-    "name": "extention",
-    "version": "1.0.0",
+    "name": "Plot Similarity Annotator",
+    "version": "1.0.1",
     "description": "",
     "main": "background.js",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
-    "author": "",
+    "author": "aturytsa",
     "license": "ISC"
 }

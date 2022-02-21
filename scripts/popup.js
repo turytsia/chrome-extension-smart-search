@@ -1,81 +1,30 @@
-function getElements(...args) {
-    return args.map((selector) => document.querySelector(selector));
-}
+//components
+import Item from "./components/item.js";
+import Message from "./components/message.js";
+//variables
+import VARIABLES from "./variables.js";
 
-function createElements(...args) {
-    return args.map((element) => document.createElement(element));
-}
+const [list] = document.getElementsByClassName("list");
 
-//creates message inside list for the user
-function createMessage(message) {
-    const messageElement = document.createElement("p");
-    messageElement.innerHTML = message;
-    list.append(messageElement);
-}
+chrome.storage.local.get("data", ({ data }) => {
+    const response = JSON.parse(data);
 
-//saves checkbox state
-function saveCheckboxState() {
-    window.localStorage.setItem("controller_checked", controller.checked);
-}
+    //if movies are found
+    if (!response.length) {
+        list.append(Message("no results..."));
+        return;
+    }
+    const items = response.slice(0, 20);
 
-//returns saved state
-function getCheckboxState() {
-    return window.localStorage.getItem("controller_checked") === "true";
-}
+    const headers = {
+        "x-rapidapi-host": VARIABLES.API_HOST,
+        "x-rapidapi-key": VARIABLES.API_KEY,
+    };
 
-const [list, controller] = getElements(".list", "#switch");
-
-controller.checked = getCheckboxState();
-
-controller.addEventListener("change", saveCheckboxState);
-
-function createList() {
-    chrome.storage.local.get("data", ({ data }) => {
-        const response = JSON.parse(data);
-
-        if (!response.results) {
-            return createMessage("no results...");
-        }
-        const items = response.results;
-
-        for (let item of items) {
-            const [
-                itemElement,
-                itemWrapper,
-                imageWrapper,
-                contentWrapper,
-                title,
-                year,
-            ] = createElements("li", "a", "div", "div", "h4", "h5");
-
-            //set classes
-            imageWrapper.className = "list-item__img";
-            contentWrapper.className = "list-item__content";
-            //set attributes
-            itemWrapper.setAttribute("target", "_blank");
-            itemWrapper.setAttribute("href", `https://www.imdb.com${item.id}`);
-            //set styling
-            imageWrapper.style.backgroundImage = `url(${
-        item.image ? item.image.url : "../i/no-img.png"
-      }`;
-
-            console.log(item);
-            //set values
-            title.innerHTML = item.title ?? item.name;
-            year.innerHTML = item.year ?? "Actor";
-
-            contentWrapper.append(title);
-            contentWrapper.append(year);
-            itemWrapper.append(imageWrapper);
-            itemWrapper.append(contentWrapper);
-            itemElement.append(itemWrapper);
-            list.append(itemElement);
-        }
+    //makes request for each movie
+    items.map((item) => {
+        fetch(`${VARIABLES.URL_SEARCH_BY_ID + item.imdb_id}/`, { headers })
+            .then((response) => response.json())
+            .then((data) => list.append(Item(data.results)));
     });
-}
-
-if (controller.checked) {
-    createList();
-} else {
-    createMessage("Switch on an extension.");
-}
+});

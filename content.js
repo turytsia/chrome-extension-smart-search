@@ -8,11 +8,10 @@ function selectionHandler() {
 }
 
 function requestData(search) {
-
-    const URL = `https://imdb8.p.rapidapi.com/title/find?q=${search}`;
+    const URL = `${VARIABLES.URL_SEARCH}/${search}/`; //`https://data-imdb1.p.rapidapi.com/movie/id/tt0086250/`;
     const HEADERS = {
-        "x-rapidapi-key": variables.API_KEY,
-        "x-rapidapi-host": variables.HOST,
+        "x-rapidapi-key": VARIABLES.API_KEY,
+        "x-rapidapi-host": VARIABLES.HOST,
     };
 
     fetch(URL, {
@@ -21,13 +20,18 @@ function requestData(search) {
         })
         .then((response) => response.json())
         .then((data) => {
-            chrome.runtime.sendMessage({ data });
+            console.log(data)
+            chrome.runtime.sendMessage({ data: data.results });
         });
-
-    //'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=extracts|pageimages&pithumbsize=400&origin=*&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch="The Shawshank Redemption (1994)"';
 }
 
-const variables = {
-    API_KEY: "73ed7cc5b0msh81ba37d7896b5b7p193b56jsn76e4d2251350",
-    HOST: "imdb8.p.rapidapi.com"
-}
+const VARIABLES = {
+    URL_SEARCH: 'https://data-imdb1.p.rapidapi.com/movie/imdb_id/byTitle',
+    HOST: "data-imdb1.p.rapidapi.com",
+    API_KEY: "87e8559442mshbf9de432bb5b1cfp191e31jsnf3bfe3fa5aac",
+};
+
+// const CONNECTIONS = {
+//     description: "https://en.wikipedia.org/w/api.php?format=json&origin=*&action=query&prop=extracts&explaintext&exintro&titles=John%20Wick",
+//     images: "https://en.wikipedia.org/w/api.php?format=json&origin=*&action=query&prop=extracts&explaintext&exintro&titles=John%20Wick",
+// };
